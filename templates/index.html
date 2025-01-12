@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+       <meta name="description" content="사과나무구강유래물은행" />
+       <meta name="author" content="사과나무구강유래물은행" />
+       <title>인체유래물 기증 동의서 - Docsmedi AI</title>
+       <!-- Favicon-->
+       <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
+       <!-- Custom Google font-->
+       <link rel="preconnect" href="https://fonts.googleapis.com" />
+       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+       <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+       <!-- Bootstrap icons-->
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+       <!-- Core theme CSS (includes Bootstrap)-->
+       <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    </head>
+   <body class="d-flex flex-column">
+       <main class="flex-shrink-0">
+           <!-- Navigation-->
+           <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container px-5">
+                <a class="navbar-brand" href="/"><span class="fw-bolder text-primary">AppleTree OralBiobank</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                        <li class="nav-item"><a class="nav-link" href="/health">사과나무건강증진센터</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/biobank">사과나무구강유래물은행</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">기증동의서작성</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+           <!-- Page content-->
+           <section class="py-5">
+               <div class="container px-5">
+                   <!-- Contact form-->
+                   <div class="bg-light rounded-4 py-5 px-4 px-md-5">
+                       <div class="text-center mb-5">
+                           <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-file-text"></i></div>
+                           <h1 class="fw-bolder">인체유래물등의 기증 동의서</h1>
+                           <p class="lead fw-normal text-muted mb-0">귀하의 인체유래물등의 기증과 관련하여 인체유래물은행에 보관되며, 귀하의 개인정보는 엄격히 보호됩니다.</p>
+                       </div>
+                       <div class="row gx-5 justify-content-center">
+                           <div class="col-lg-8 col-xl-6">
+                               <form id="contactForm" onsubmit="return false;">
+                                   <!-- 성명 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="name" type="text" placeholder="성명을 입력하세요..." required />
+                                       <label for="name">성명</label>
+                                   </div>
+                                   
+                                   <!-- 생년월일 입력 -->
+                                   <div class="row mb-3">
+                                    <label class="form-label fw-bold">생년월일</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="birthYear" type="text" placeholder="년(4자리)" maxlength="4" required />
+                                            <label for="birthYear">년</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="birthMonth" type="text" placeholder="월" maxlength="2" required />
+                                            <label for="birthMonth">월</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="birthDay" type="text" placeholder="일" maxlength="2" required />
+                                            <label for="birthDay">일</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                   <!-- 주소 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="address" type="text" placeholder="주소를 입력하세요..." required />
+                                       <label for="address">주소</label>
+                                   </div>
+
+                                   <!-- 연락처 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="phone" type="tel" placeholder="(123) 456-7890" required />
+                                       <label for="phone">연락처</label>
+                                   </div>
+
+                                   <!-- 성별 선택 -->
+                                   <div class="form-floating mb-3">
+                                       <select class="form-control" id="gender" required>
+                                           <option value="">성별을 선택하세요</option>
+                                           <option value="male">남성</option>
+                                           <option value="female">여성</option>
+                                       </select>
+                                       <label for="gender">성별</label>
+                                   </div>
+
+                                   <!-- 동의서 작성일 -->
+                                   <div class="row mb-3">
+                                    <label class="form-label fw-bold">동의서 작성일</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="consentYear" type="text" placeholder="년(4자리)" maxlength="4" required />
+                                            <label for="consentYear">년</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="consentMonth" type="text" placeholder="월" maxlength="2" required />
+                                            <label for="consentMonth">월</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="consentDay" type="text" placeholder="일" maxlength="2" required />
+                                            <label for="consentDay">일</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                   </div>
+
+                                   <!-- 인체유래물등 기증자 동의 문구 -->
+                                   <div class="alert alert-info mb-4">
+                                       <h6 class="alert-heading fw-bold mb-1">인체유래물등의 기증 동의</h6>
+                                       <p class="mb-0">본인은 인체유래물등의 기증과 관련하여 인체유래물은행에 보관되며 연구에 활용될 수 있음을 이해하였으며, 이에 동의합니다.</p>
+                                   </div>
+
+                                   <!-- 서명 패드 -->
+                                   <div class="mb-4">
+                                       <label class="form-label fw-bold mb-2">서명</label>
+                                       <div class="border rounded p-3">
+                                           <canvas id="signatureCanvas" class="border rounded" width="100%" height="200" style="touch-action: none;"></canvas>
+                                           <div class="mt-2">
+                                               <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearSignature()">다시 서명하기</button>
+                                           </div>
+                                       </div>
+                                   </div>
+
+                                   <!-- 동의 체크박스 -->
+                                   <div class="form-check mb-3">
+                                       <input class="form-check-input" type="checkbox" id="consent" required />
+                                       <label class="form-check-label" for="consent">
+                                           위 내용을 모두 이해하였으며, 인체유래물등의 기증에 동의합니다.
+                                       </label>
+                                   </div>
+
+                                   <!-- Submit success message-->
+                                   <div class="d-none" id="submitSuccessMessage">
+                                       <div class="text-center mb-3">
+                                           <div class="fw-bolder">동의서가 성공적으로 제출되었습니다!</div>
+                                           귀하의 소중한 기증에 감사드립니다.
+                                       </div>
+                                   </div>
+
+                                   <!-- Submit error message-->
+                                   <div class="d-none" id="submitErrorMessage">
+                                       <div class="text-center text-danger mb-3">동의서 제출 중 오류가 발생했습니다!</div>
+                                   </div>
+
+                                   <!-- Submit Button-->
+                                  <!-- Submit and Direct Link Buttons -->
+<div class="row g-2">
+    <div class="col-6">
+        <button class="btn btn-primary btn-lg w-100" id="submitButton" type="submit" onclick="submitForm()">기증하고 문진</button>
+    </div>
+    <div class="col-6">
+        <button class="btn btn-success btn-lg w-100" onclick="openHealthCheck()">기증없이 문진</button>
+    </div>
+</div>
+<!-- Consent Examples -->
+<div class="mt-4">
+    <h5 class="fw-bold mb-3">기증동의서 예시</h5>
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
+            <img src="{{ url_for('static', filename='img/consentex1.jpg') }}" 
+                 alt="기증동의서 예시 1" 
+                 class="img-fluid rounded shadow">
+        </div>
+        <div class="col-12 col-md-6">
+            <img src="{{ url_for('static', filename='img/consentex2.jpg') }}" 
+                 alt="기증동의서 예시 2" 
+                 class="img-fluid rounded shadow">
+        </div>
+    </div>
+</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+       </main>
+       <!-- Footer-->
+       <footer class="bg-white py-4 mt-auto">
+           <div class="container px-5">
+               <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                   <div class="col-auto"><div class="small m-0">Copyright &copy; 사과나무구강유래물은행 2025</div></div>
+                   <div class="col-auto">
+                       <a class="small" href="#!">Privacy</a>
+                       <span class="mx-1">&middot;</span>
+                       <a class="small" href="#!">Terms</a>
+                       <span class="mx-1">&middot;</span>
+                       <a class="small" href="#!">Contact</a>
+                   </div>
+               </div>
+           </div>
+       </footer>
+       <!-- Bootstrap core JS-->
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+       <!-- Core theme JS-->
+       <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+   </body>
+</html>
