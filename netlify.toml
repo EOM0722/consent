@@ -1,8 +1,8 @@
 [build]
-  publish = "/"
-  command = "echo 'No build required'"  # 또는 그냥 비워둬도 됨
+publish = "static"
+command = "npm run build"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
