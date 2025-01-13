@@ -1,6 +1,6 @@
 [build]
-publish = "."
-command = ""
+publish = "static"  # 정적 파일이 포함된 디렉터리
+command = ""        # 빌드 과정이 필요 없으므로 비워 둠
 
 [[redirects]]
 from = "/*"
