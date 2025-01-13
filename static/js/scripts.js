@@ -2,6 +2,7 @@ let canvas, ctx;
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
+let previousWidth = 0; // 이전 캔버스 너비 저장
 
 // API 엔드포인트 URL (ngrok HTTPS URL 사용)
 const API_URL = 'https://atob.ngrok.app';
@@ -14,13 +15,26 @@ document.addEventListener('DOMContentLoaded', function () {
     // Canvas 크기 및 초기화
     function initializeCanvas() {
         const containerWidth = canvas.parentElement.offsetWidth - 20; // 양쪽 여백 20px
-        canvas.width = containerWidth;
-        canvas.height = 200; // 고정 높이
-        ctx.fillStyle = '#ffffff'; // 흰색 배경 추가
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = '#000'; // 검은색 선
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
+        if (containerWidth !== previousWidth) {
+            // 기존 내용을 저장
+            const existingContent = canvas.toDataURL();
+
+            // 캔버스 크기 조정
+            canvas.width = containerWidth;
+            canvas.height = 200; // 고정 높이
+            ctx.fillStyle = '#ffffff'; // 흰색 배경 추가
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#000'; // 검은색 선
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+
+            // 기존 내용을 다시 그리기
+            const img = new Image();
+            img.src = existingContent;
+            img.onload = () => ctx.drawImage(img, 0, 0);
+
+            previousWidth = containerWidth;
+        }
     }
 
     initializeCanvas();
@@ -36,6 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('touchstart', handleTouchStart);
     canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', () => (isDrawing = false));
+
+    // 입력 필드와 체크박스 클릭 시 캔버스 초기화 방지
+    preventCanvasResetOnInput();
 });
 
 // 터치 시작 처리
@@ -107,9 +124,16 @@ function clearSignature() {
     }
 }
 
+// 입력 필드 및 체크박스 클릭 시 초기화 방지
+function preventCanvasResetOnInput() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('focus', (e) => e.stopPropagation());
+    });
+}
+
 // 서명 저장
 async function saveSignature() {
-    const canvas = document.getElementById('signatureCanvas');
     const signatureData = canvas.toDataURL('image/png');
     const name = document.getElementById('name').value;
 
