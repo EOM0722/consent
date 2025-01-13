@@ -4,7 +4,7 @@ let lastX = 0;
 let lastY = 0;
 
 // API 엔드포인트 URL을 ngrok URL로 변경  
-const API_URL = 'https://atob.ngrok.app';
+const API_URL = 'https://atob.ngrok.app/save-signature';
 
 // 서명 패드 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Canvas 크기 설정
     function resizeCanvas() {
-        const containerWidth = canvas.parentElement.offsetWidth - 20;
+        const containerWidth = canvas.parentElement.offsetWidth - 40;
         canvas.width = containerWidth;
         canvas.height = 200;
         ctx.strokeStyle = '#000';
@@ -66,7 +66,7 @@ function openHealthCheck() {
     window.open(
         'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1',
         'healthCheck',
-        width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes
+        `width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes`
     );
 }
 
@@ -101,7 +101,7 @@ function saveSignature() {
 
     console.log('서명 저장 시도...');
 
-    fetch(${API_URL}/save-signature, {
+    fetch(`${API_URL}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ function submitForm() {
                 window.open(
                     'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1',
                     'questionnaire',
-                    width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes
+                    `width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes`
                 );
             } else {
                 document.getElementById('submitErrorMessage').classList.remove('d-none');
