@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
 function handleTouch(e) {
     e.preventDefault(); // 기본 터치 동작 방지 (예: 화면 스크롤)
 
-    const touch = e.touches[0]; // 첫 번째 터치만 처리
-    const rect = canvas.getBoundingClientRect(); // 캔버스 경계 계산
-    const x = touch.clientX - rect.left; // 터치 X 좌표
-    const y = touch.clientY - rect.top; // 터치 Y 좌표
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
 
     if (e.type === 'touchstart') {
         isDrawing = true;
