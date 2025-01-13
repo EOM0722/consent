@@ -11,18 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas = document.getElementById('signatureCanvas');
     ctx = canvas.getContext('2d');
 
-    // Canvas 크기 설정 (부모 요소 크기에 맞춤)
-    function resizeCanvas() {
+    // Canvas 크기 및 초기화
+    function initializeCanvas() {
         const containerWidth = canvas.parentElement.offsetWidth - 20; // 양쪽 여백 20px
         canvas.width = containerWidth;
-        canvas.height = 200; // 고정 높이 설정
-        ctx.strokeStyle = '#000';
+        canvas.height = 200; // 고정 높이
+        ctx.fillStyle = '#ffffff'; // 흰색 배경 추가
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#000'; // 검은색 선
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
     }
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas); // 창 크기 변경 시 재조정
+    initializeCanvas();
+    window.addEventListener('resize', initializeCanvas); // 창 크기 변경 시 재조정
 
     // 마우스 이벤트
     canvas.addEventListener('mousedown', startDrawing);
@@ -31,31 +33,35 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('mouseout', stopDrawing);
 
     // 터치 이벤트
-    canvas.addEventListener('touchstart', handleTouch);
-    canvas.addEventListener('touchmove', handleTouch);
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', () => (isDrawing = false));
 });
 
-// 터치 이벤트 처리 함수
-function handleTouch(e) {
+// 터치 시작 처리
+function handleTouchStart(e) {
     e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+    isDrawing = true;
+}
+
+// 터치 이동 처리
+function handleTouchMove(e) {
+    e.preventDefault();
+    if (!isDrawing) return;
     const touch = e.touches[0];
     const rect = canvas.getBoundingClientRect();
     const x = touch.clientX - rect.left;
     const y = touch.clientY - rect.top;
-
-    if (e.type === 'touchstart') {
-        isDrawing = true;
-        lastX = x;
-        lastY = y;
-    } else if (e.type === 'touchmove' && isDrawing) {
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        lastX = x;
-        lastY = y;
-    }
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
 }
 
 // "기증 없이 문진" 버튼 클릭 시 열리는 팝업
@@ -96,7 +102,8 @@ function stopDrawing() {
 // 서명 초기화
 function clearSignature() {
     if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff'; // 캔버스를 흰색으로 초기화
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 }
 
