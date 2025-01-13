@@ -4,7 +4,7 @@ let lastX = 0;
 let lastY = 0;
 
 // 서버 URL 설정 
-const API_URL = 'http://172.18.48.238:8080';
+const API_URL = 'https://atob.ngrok.app';
 
 document.addEventListener('DOMContentLoaded', function() {
    canvas = document.getElementById('signatureCanvas');
