@@ -33,24 +33,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function handleTouch(e) {
-   e.preventDefault();
-   const touch = e.touches[0];
-   const rect = canvas.getBoundingClientRect();
-   const x = touch.clientX - rect.left;
-   const y = touch.clientY - rect.top;
+    e.preventDefault(); // 기본 터치 동작 방지 (예: 화면 스크롤)
 
-   if (e.type === 'touchstart') {
-       isDrawing = true;
-       lastX = x;
-       lastY = y;
-   } else if (e.type === 'touchmove' && isDrawing) {
-       ctx.beginPath();
-       ctx.moveTo(lastX, lastY);
-       ctx.lineTo(x, y);
-       ctx.stroke();
-       lastX = x;
-       lastY = y;
-   }
+    const touch = e.touches[0]; // 첫 번째 터치만 처리
+    const rect = canvas.getBoundingClientRect(); // 캔버스 경계 계산
+    const x = touch.clientX - rect.left; // 터치 X 좌표
+    const y = touch.clientY - rect.top; // 터치 Y 좌표
+
+    if (e.type === 'touchstart') {
+        isDrawing = true;
+        lastX = x;
+        lastY = y;
+    } else if (e.type === 'touchmove' && isDrawing) {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lastX = x;
+        lastY = y;
+    } else if (e.type === 'touchend' || e.type === 'touchcancel') {
+        isDrawing = false;
+    }
 }
 
 function openHealthCheck() {
