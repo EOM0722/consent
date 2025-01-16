@@ -2,33 +2,40 @@ let canvas, ctx;
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
-let previousWidth = 0; // 이전 캔버스 너비 저장
+let previousWidth = 0;
 
-// API 엔드포인트 URL (ngrok HTTPS URL 사용)
 const API_URL = 'https://atob.ngrok.app';
 
 // 서명 패드 초기화
 document.addEventListener('DOMContentLoaded', function () {
+    // 캔버스 초기화
+    initializeCanvas();
+    
+    // 생년월일 드롭다운 옵션 생성
+    populateBirthDateDropdowns();
+    
+    // 현재 날짜 표시
+    displayCurrentDate();
+});
+
+// 캔버스 초기화 함수
+function initializeCanvas() {
     canvas = document.getElementById('signatureCanvas');
     ctx = canvas.getContext('2d');
 
-    // Canvas 크기 및 초기화
-    function initializeCanvas() {
-        const containerWidth = canvas.parentElement.offsetWidth - 20; // 양쪽 여백 20px
+    function setCanvasSize() {
+        const containerWidth = canvas.parentElement.offsetWidth - 20;
         if (containerWidth !== previousWidth) {
-            // 기존 내용을 저장
             const existingContent = canvas.toDataURL();
-
-            // 캔버스 크기 조정
             canvas.width = containerWidth;
-            canvas.height = 200; // 고정 높이
-            ctx.fillStyle = '#ffffff'; // 흰색 배경 추가
+            canvas.height = 200;
+            
+            ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#000'; // 검은색 선
+            ctx.strokeStyle = '#000';
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
 
-            // 기존 내용을 다시 그리기
             const img = new Image();
             img.src = existingContent;
             img.onload = () => ctx.drawImage(img, 0, 0);
@@ -37,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    initializeCanvas();
-    window.addEventListener('resize', initializeCanvas); // 창 크기 변경 시 재조정
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
 
     // 마우스 이벤트
     canvas.addEventListener('mousedown', startDrawing);
@@ -51,11 +58,58 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', () => (isDrawing = false));
 
-    // 입력 필드와 체크박스 클릭 시 캔버스 초기화 방지
     preventCanvasResetOnInput();
-});
+}
 
-// 터치 시작 처리
+// 생년월일 드롭다운 옵션 생성
+function populateBirthDateDropdowns() {
+    const yearSelect = document.getElementById('birthYear');
+    const monthSelect = document.getElementById('birthMonth');
+    const daySelect = document.getElementById('birthDay');
+
+    // 년도 옵션 (현재 년도부터 100년 전까지)
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= currentYear - 100; year--) {
+        const option = new Option(year, year);
+        yearSelect.add(option);
+    }
+
+    // 월 옵션
+    for (let month = 1; month <= 12; month++) {
+        const option = new Option(month, month);
+        monthSelect.add(option);
+    }
+
+    // 일 옵션 업데이트 함수
+    function updateDays() {
+        const year = parseInt(yearSelect.value);
+        const month = parseInt(monthSelect.value);
+        const daysInMonth = new Date(year, month, 0).getDate();
+
+        daySelect.innerHTML = '<option value="">일 선택</option>';
+        for (let day = 1; day <= daysInMonth; day++) {
+            const option = new Option(day, day);
+            daySelect.add(option);
+        }
+    }
+
+    yearSelect.addEventListener('change', updateDays);
+    monthSelect.addEventListener('change', updateDays);
+
+    // 초기 일 옵션 생성
+    updateDays();
+}
+
+// 현재 날짜 표시
+function displayCurrentDate() {
+    const currentDate = new Date();
+    const dateString = currentDate.getFullYear() + '년 ' + 
+                      (currentDate.getMonth() + 1) + '월 ' + 
+                      currentDate.getDate() + '일';
+    document.getElementById('currentDate').textContent = dateString;
+}
+
+// 터치 이벤트 처리
 function handleTouchStart(e) {
     e.preventDefault();
     const touch = e.touches[0];
@@ -65,7 +119,6 @@ function handleTouchStart(e) {
     isDrawing = true;
 }
 
-// 터치 이동 처리
 function handleTouchMove(e) {
     e.preventDefault();
     if (!isDrawing) return;
@@ -81,27 +134,12 @@ function handleTouchMove(e) {
     lastY = y;
 }
 
-// "기증 없이 문진" 버튼 클릭 시 열리는 팝업
-function openHealthCheck() {
-    const width = Math.min(1200, window.screen.width * 0.9);
-    const height = Math.min(900, window.screen.height * 0.9);
-    const left = (window.screen.width - width) / 2;
-    const top = (window.screen.height - height) / 2;
-
-    window.open(
-        'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1',
-        'healthCheck',
-        `width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes`
-    );
-}
-
-// 마우스 드로잉 시작
+// 마우스 드로잉 함수들
 function startDrawing(e) {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
 }
 
-// 드로잉 중
 function draw(e) {
     if (!isDrawing) return;
     ctx.beginPath();
@@ -111,20 +149,15 @@ function draw(e) {
     [lastX, lastY] = [e.offsetX, e.offsetY];
 }
 
-// 드로잉 종료
 function stopDrawing() {
     isDrawing = false;
 }
 
-// 서명 초기화
 function clearSignature() {
-    if (ctx) {
-        ctx.fillStyle = '#ffffff'; // 캔버스를 흰색으로 초기화
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// 입력 필드 및 체크박스 클릭 시 초기화 방지
 function preventCanvasResetOnInput() {
     const inputs = document.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
@@ -169,22 +202,18 @@ async function saveSignature() {
 // 폼 제출
 async function submitForm() {
     const form = document.getElementById('contactForm');
+    
+    // 폼 데이터 수집
     const name = document.getElementById('name').value;
-    const birthdate =
-        document.getElementById('birthYear').value +
-        '-' +
-        String(document.getElementById('birthMonth').value).padStart(2, '0') +
-        '-' +
-        String(document.getElementById('birthDay').value).padStart(2, '0');
+    const birthYear = document.getElementById('birthYear').value;
+    const birthMonth = String(document.getElementById('birthMonth').value).padStart(2, '0');
+    const birthDay = String(document.getElementById('birthDay').value).padStart(2, '0');
+    const birthdate = `${birthYear}-${birthMonth}-${birthDay}`;
     const address = document.getElementById('address').value;
     const phone = document.getElementById('phone').value;
     const gender = document.getElementById('gender').value;
-    const consentDate =
-        document.getElementById('consentYear').value +
-        '-' +
-        String(document.getElementById('consentMonth').value).padStart(2, '0') +
-        '-' +
-        String(document.getElementById('consentDay').value).padStart(2, '0');
+    const currentDate = new Date();
+    const consentDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
     const consent = document.getElementById('consent').checked;
 
     if (!consent) {
@@ -200,44 +229,27 @@ async function submitForm() {
     }
 
     // 구글 스크립트 API 호출
-    const url =
-        'https://script.google.com/macros/s/AKfycby5CTjdm75XCPmW9CAHIqUZH6gr10G_E_Z8xzLyuUAjYkwYz7Ay3wpQEmNRtNuQ4REj/exec';
+    const url = 'https://script.google.com/macros/s/AKfycby5CTjdm75XCPmW9CAHIqUZH6gr10G_E_Z8xzLyuUAjYkwYz7Ay3wpQEmNRtNuQ4REj/exec';
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                document
-                    .getElementById('submitSuccessMessage')
-                    .classList.remove('d-none');
+                document.getElementById('submitSuccessMessage').classList.remove('d-none');
                 form.reset();
                 clearSignature();
-                openHealthCheck();
+                // 동의서 제출 후 건강검진 페이지로 이동
+                window.location.href = 'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1';
             } else {
-                document
-                    .getElementById('submitErrorMessage')
-                    .classList.remove('d-none');
+                document.getElementById('submitErrorMessage').classList.remove('d-none');
             }
             document.getElementById('submitButton').disabled = false;
         }
     };
 
-    const data =
-        'name=' +
-        encodeURIComponent(name) +
-        '&birthdate=' +
-        encodeURIComponent(birthdate) +
-        '&address=' +
-        encodeURIComponent(address) +
-        '&phone=' +
-        encodeURIComponent(phone) +
-        '&gender=' +
-        encodeURIComponent(gender) +
-        '&consentDate=' +
-        encodeURIComponent(consentDate) +
-        '&consent=' +
-        encodeURIComponent(consent);
+    const data = `name=${encodeURIComponent(name)}&birthdate=${encodeURIComponent(birthdate)}&address=${encodeURIComponent(address)}&phone=${encodeURIComponent(phone)}&gender=${encodeURIComponent(gender)}&consentDate=${encodeURIComponent(consentDate)}&consent=${encodeURIComponent(consent)}`;
 
     xhr.send(data);
     document.getElementById('submitButton').disabled = true;
