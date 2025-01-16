@@ -1,292 +1,201 @@
-let canvas, ctx;
-let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
-let previousWidth = 0;
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="사과나무구강유래물은행" />
+    <meta name="author" content="사과나무구강유래물은행" />
+    <title>건강검진 설문 및 인체유래물 기증 동의</title>
 
-const API_URL = 'https://atob.ngrok.app';
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="건강검진 설문 및 인체유래물 기증 동의">
+    <meta property="og:description" content="귀하의 인체유래물 기증 동의서를 작성하고 안전하게 제출하세요.">
+    <meta property="og:image" content="https://atobconsent.netlify.app/static/img/your-new-image.jpg">
+    <meta property="og:url" content="https://atobconsent.netlify.app/">
+    <meta property="og:type" content="website">
 
-// 서명 패드 초기화
-document.addEventListener('DOMContentLoaded', function () {
-    // 동의 여부 선택 폼 이벤트 리스너 추가
-    const consentForm = document.getElementById('consentForm');
-    if (consentForm) {
-        consentForm.addEventListener('submit', handleConsentSubmit);
-    }
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="static/assets/favicon.ico" />
 
-    // 기존 동의서 페이지 초기화 (contact.html에서 실행)
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        initializeConsentForm();
-    }
-});
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-// 동의 여부 선택 처리
-function handleConsentSubmit(event) {
-    event.preventDefault();
-    const consent = document.querySelector('input[name="consent"]:checked');
-    
-    if (!consent) {
-        alert("동의 여부를 선택해주세요.");
-        return;
-    }
+    <!-- Custom Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
 
-    if (consent.value === "agree") {
-        window.location.href = "contact.html";
-    } else {
-        alert("문진 페이지로 이동합니다.");
-        window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
-    }
-}
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
 
-// 동의서 페이지 초기화 함수
-function initializeConsentForm() {
-    initializeCanvas();
-    populateBirthDateDropdowns();
-    displayCurrentDate();
-}
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+   <body class="d-flex flex-column">
+       <main class="flex-shrink-0">
+           <!-- Navigation-->
+           <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+               <div class="container px-5">
+                   <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">Apple Tree Oral Biobank</span></a>
+                   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                       <span class="navbar-toggler-icon"></span>
+                   </button>
+                   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                           <li class="nav-item"><a class="nav-link" href="index.html">기증동의서작성</a></li>
+                       </ul>
+                   </div>
+               </div>
+           </nav>
+           <!-- Page content-->
+           <section class="py-5">
+               <div class="container px-5">
+                   <!-- Contact form-->
+                   <div class="bg-light rounded-4 py-5 px-4 px-md-5">
+                       <div class="text-center mb-5">
+                           <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-file-text"></i></div>
+                           <h1 class="fw-bolder">국민건강보험 건강검진 및 인체유래물등의 기증 동의서</h1>
+                           <p class="lead fw-normal text-muted mb-0">귀하의 인체유래물등의 기증과 관련하여 인체유래물은행에 보관되며, 귀하의 개인정보는 엄격히 보호됩니다.</p>
+                       </div>
+                       <div class="row gx-5 justify-content-center">
+                           <div class="col-lg-8 col-xl-6">
+                               <form id="contactForm" onsubmit="return false;">
+                                   <!-- 성명 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="name" type="text" placeholder="성명을 입력하세요..." required />
+                                       <label for="name">성명</label>
+                                   </div>
+                                   
+                                   <!-- 생년월일 입력 (드롭다운) -->
+                                   <div class="row mb-3">
+                                       <label class="form-label fw-bold">생년월일</label>
+                                       <div class="col-sm-4">
+                                           <select class="form-select" id="birthYear" required>
+                                               <option value="">년도 선택</option>
+                                           </select>
+                                       </div>
+                                       <div class="col-sm-4">
+                                           <select class="form-select" id="birthMonth" required>
+                                               <option value="">월 선택</option>
+                                           </select>
+                                       </div>
+                                       <div class="col-sm-4">
+                                           <select class="form-select" id="birthDay" required>
+                                               <option value="">일 선택</option>
+                                           </select>
+                                       </div>
+                                   </div>
 
-// 캔버스 초기화 함수
-function initializeCanvas() {
-    canvas = document.getElementById('signatureCanvas');
-    if (!canvas) return;
+                                   <!-- 주소 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="address" type="text" placeholder="주소를 입력하세요..." required />
+                                       <label for="address">주소</label>
+                                   </div>
 
-    ctx = canvas.getContext('2d');
+                                   <!-- 연락처 입력 -->
+                                   <div class="form-floating mb-3">
+                                       <input class="form-control" id="phone" type="tel" placeholder="(123) 456-7890" required />
+                                       <label for="phone">연락처</label>
+                                   </div>
 
-    function setCanvasSize() {
-        const containerWidth = canvas.parentElement.offsetWidth - 20;
-        if (containerWidth !== previousWidth) {
-            const existingContent = canvas.toDataURL();
-            canvas.width = containerWidth;
-            canvas.height = 200;
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
+                                   <!-- 성별 선택 -->
+                                   <div class="form-floating mb-3">
+                                       <select class="form-control" id="gender" required>
+                                           <option value="">성별을 선택하세요</option>
+                                           <option value="male">남성</option>
+                                           <option value="female">여성</option>
+                                       </select>
+                                       <label for="gender">성별</label>
+                                   </div>
 
-            const img = new Image();
-            img.src = existingContent;
-            img.onload = () => ctx.drawImage(img, 0, 0);
+                                   <!-- 동의서 작성일 (현재 날짜 자동 표시) -->
+                                   <div class="mb-3">
+                                       <label class="form-label fw-bold">동의서 작성일</label>
+                                       <div class="form-control" id="currentDate" readonly></div>
+                                   </div>
 
-            previousWidth = containerWidth;
-        }
-    }
+                                   <!-- 인체유래물등 기증자 동의 문구 -->
+                                   <div class="alert alert-info mb-4">
+                                       <h6 class="alert-heading fw-bold mb-1">인체유래물등의 기증 동의</h6>
+                                       <p class="mb-0">본인은 인체유래물등의 기증과 관련하여 인체유래물은행에 보관되며 연구에 활용될 수 있음을 이해하였으며, 이에 동의합니다.</p>
+                                   </div>
 
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
+                                   <!-- 서명 패드 -->
+                                   <div class="mb-4">
+                                       <label class="form-label fw-bold mb-2">서명</label>
+                                       <div class="border rounded p-3">
+                                           <canvas id="signatureCanvas" class="border rounded" width="100%" height="200" style="touch-action: none;"></canvas>
+                                           <div class="mt-2">
+                                               <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearSignature()">다시 서명하기</button>
+                                           </div>
+                                       </div>
+                                   </div>
 
-    // 마우스 이벤트
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
+                                   <!-- 동의 체크박스 -->
+                                   <div class="form-check mb-3">
+                                       <input class="form-check-input" type="checkbox" id="consent" required />
+                                       <label class="form-check-label" for="consent">
+                                           위 내용을 모두 이해하였으며, 인체유래물등의 기증에 동의합니다.
+                                       </label>
+                                   </div>
 
-    // 터치 이벤트
-    canvas.addEventListener('touchstart', handleTouchStart);
-    canvas.addEventListener('touchmove', handleTouchMove);
-    canvas.addEventListener('touchend', () => (isDrawing = false));
+                                   <!-- Submit success message-->
+                                   <div class="d-none" id="submitSuccessMessage">
+                                       <div class="text-center mb-3">
+                                           <div class="fw-bolder">동의서가 성공적으로 제출되었습니다!</div>
+                                           귀하의 소중한 기증에 감사드립니다.
+                                       </div>
+                                   </div>
 
-    preventCanvasResetOnInput();
-}
+                                   <!-- Submit error message-->
+                                   <div class="d-none" id="submitErrorMessage">
+                                       <div class="text-center text-danger mb-3">동의서 제출 중 오류가 발생했습니다!</div>
+                                   </div>
 
-// 생년월일 드롭다운 옵션 생성
-function populateBirthDateDropdowns() {
-    const yearSelect = document.getElementById('birthYear');
-    const monthSelect = document.getElementById('birthMonth');
-    const daySelect = document.getElementById('birthDay');
+                                   <!-- Submit Button -->
+                                   <div class="d-grid">
+                                       <button class="btn btn-primary btn-lg" id="submitButton" type="submit" onclick="submitForm()">기증하고 문진</button>
+                                   </div>
 
-    if (!yearSelect || !monthSelect || !daySelect) return;
-
-    // 년도 옵션 (현재 년도부터 100년 전까지)
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= currentYear - 100; year--) {
-        const option = new Option(year, year);
-        yearSelect.add(option);
-    }
-
-    // 월 옵션
-    for (let month = 1; month <= 12; month++) {
-        const option = new Option(month, month);
-        monthSelect.add(option);
-    }
-
-    // 일 옵션 업데이트 함수
-    function updateDays() {
-        const year = parseInt(yearSelect.value);
-        const month = parseInt(monthSelect.value);
-        const daysInMonth = new Date(year, month, 0).getDate();
-
-        daySelect.innerHTML = '<option value="">일 선택</option>';
-        for (let day = 1; day <= daysInMonth; day++) {
-            const option = new Option(day, day);
-            daySelect.add(option);
-        }
-    }
-
-    yearSelect.addEventListener('change', updateDays);
-    monthSelect.addEventListener('change', updateDays);
-
-    updateDays();
-}
-
-// 현재 날짜 표시
-function displayCurrentDate() {
-    const currentDateElement = document.getElementById('currentDate');
-    if (!currentDateElement) return;
-
-    const currentDate = new Date();
-    const dateString = currentDate.getFullYear() + '년 ' + 
-                      (currentDate.getMonth() + 1) + '월 ' + 
-                      currentDate.getDate() + '일';
-    currentDateElement.textContent = dateString;
-}
-
-// 터치 이벤트 처리
-function handleTouchStart(e) {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    lastX = touch.clientX - rect.left;
-    lastY = touch.clientY - rect.top;
-    isDrawing = true;
-}
-
-function handleTouchMove(e) {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    lastX = x;
-    lastY = y;
-}
-
-// 마우스 드로잉 함수들
-function startDrawing(e) {
-    isDrawing = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
-}
-
-function draw(e) {
-    if (!isDrawing) return;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-    [lastX, lastY] = [e.offsetX, e.offsetY];
-}
-
-function stopDrawing() {
-    isDrawing = false;
-}
-
-function clearSignature() {
-    if (!ctx) return;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function preventCanvasResetOnInput() {
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('focus', (e) => e.stopPropagation());
-    });
-}
-
-// 서명 저장
-async function saveSignature() {
-    const signatureData = canvas.toDataURL('image/png');
-    const name = document.getElementById('name').value;
-
-    console.log('서명 저장 시도...');
-
-    try {
-        const response = await fetch(`${API_URL}/save-signature`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                signature: signatureData,
-                name: name,
-            }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            console.log('서명이 성공적으로 저장되었습니다:', data.filename);
-            return true;
-        } else {
-            console.error('서명 저장 실패:', data.error);
-            return false;
-        }
-    } catch (error) {
-        console.error('서명 저장 중 오류 발생:', error);
-        return false;
-    }
-}
-
-// 폼 제출
-async function submitForm() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-    
-    // 폼 데이터 수집
-    const name = document.getElementById('name').value;
-    const birthYear = document.getElementById('birthYear').value;
-    const birthMonth = String(document.getElementById('birthMonth').value).padStart(2, '0');
-    const birthDay = String(document.getElementById('birthDay').value).padStart(2, '0');
-    const birthdate = `${birthYear}-${birthMonth}-${birthDay}`;
-    const address = document.getElementById('address').value;
-    const phone = document.getElementById('phone').value;
-    const gender = document.getElementById('gender').value;
-    const currentDate = new Date();
-    const consentDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-    const consent = document.getElementById('consent').checked;
-
-    if (!consent) {
-        alert('인체유래물등 기증 동의가 필요합니다.');
-        return;
-    }
-
-    // 서명 저장
-    const isSignatureSaved = await saveSignature();
-    if (!isSignatureSaved) {
-        alert('서명 저장 중 오류가 발생했습니다.');
-        return;
-    }
-
-    // 구글 스크립트 API 호출
-    const url = 'https://script.google.com/macros/s/AKfycby5CTjdm75XCPmW9CAHIqUZH6gr10G_E_Z8xzLyuUAjYkwYz7Ay3wpQEmNRtNuQ4REj/exec';
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                document.getElementById('submitSuccessMessage').classList.remove('d-none');
-                form.reset();
-                clearSignature();
-                // 동의서 제출 후 건강검진 페이지로 이동
-                window.location.href = 'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1';
-            } else {
-                document.getElementById('submitErrorMessage').classList.remove('d-none');
-            }
-            document.getElementById('submitButton').disabled = false;
-        }
-    };
-
-    const data = `name=${encodeURIComponent(name)}&birthdate=${encodeURIComponent(birthdate)}&address=${encodeURIComponent(address)}&phone=${encodeURIComponent(phone)}&gender=${encodeURIComponent(gender)}&consentDate=${encodeURIComponent(consentDate)}&consent=${encodeURIComponent(consent)}`;
-
-    xhr.send(data);
-    document.getElementById('submitButton').disabled = true;
-}
+                                   <!-- Consent Examples -->
+                                   <div class="mt-4">
+                                       <h5 class="fw-bold mb-3">기증동의서 예시</h5>
+                                       <div class="row g-4">
+                                           <div class="col-12 col-md-6">
+                                               <img src="static/img/consentex1.jpg" alt="Consent Example 1" class="img-fluid">
+                                           </div>
+                                           <div class="col-12 col-md-6">
+                                               <img src="static/img/consentex2.jpg" alt="Consent Example 2" class="img-fluid">
+                                           </div>
+                                       </div>
+                                   </div>
+                               </form>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+       </main>
+       <!-- Footer-->
+       <footer class="bg-white py-4 mt-auto">
+           <div class="container px-5">
+               <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                   <div class="col-auto"><div class="small m-0">Copyright &copy; 사과나무구강유래물은행 2025</div></div>
+                   <div class="col-auto">
+                       <a class="small" href="#!">Privacy</a>
+                       <span class="mx-1">&middot;</span>
+                       <a class="small" href="#!">Terms</a>
+                       <span class="mx-1">&middot;</span>
+                       <a class="small" href="#!">Contact</a>
+                   </div>
+               </div>
+           </div>
+       </footer>
+       <!-- jQuery -->
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <!-- Bootstrap core JS-->
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+       <!-- Core theme JS-->
+       <script src="static/js/scripts.js"></script>
+   </body>
+</html>
