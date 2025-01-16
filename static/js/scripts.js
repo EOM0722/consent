@@ -31,23 +31,18 @@ function handleConsentSubmit(event) {
         return;
     }
 
-if (consent.value === "agree") {
-    window.location.href = "/template/contact.html";  // 템플릿 폴더 경로 제거
-} else {
-    // 미동의시 문진 페이지로 이동
-    alert("문진 페이지로 이동합니다.");
-    window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
+    if (consent.value === "agree") {
+        window.location.href = "contact.html";
+    } else {
+        alert("문진 페이지로 이동합니다.");
+        window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
+    }
 }
 
 // 동의서 페이지 초기화 함수
 function initializeConsentForm() {
-    // 캔버스 초기화
     initializeCanvas();
-    
-    // 생년월일 드롭다운 옵션 생성
     populateBirthDateDropdowns();
-    
-    // 현재 날짜 표시
     displayCurrentDate();
 }
 
@@ -133,7 +128,6 @@ function populateBirthDateDropdowns() {
     yearSelect.addEventListener('change', updateDays);
     monthSelect.addEventListener('change', updateDays);
 
-    // 초기 일 옵션 생성
     updateDays();
 }
 
