@@ -1,8 +1,8 @@
 [build]
-publish = "static"  # 정적 파일이 포함된 디렉터리
-command = ""        # 빌드 과정이 필요 없으므로 비워 둠
+  publish = "/"
+  command = ""
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/*"
+  to = "/index.html"
+  status = 200
