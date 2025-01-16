@@ -32,7 +32,7 @@ function handleConsentSubmit(event) {
     }
 
 if (consent.value === "agree") {
-    window.location.href = "contact.html";  // 템플릿 폴더 경로 제거
+    window.location.href = "/template/contact.html";  // 템플릿 폴더 경로 제거
 } else {
     // 미동의시 문진 페이지로 이동
     alert("문진 페이지로 이동합니다.");
