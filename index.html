@@ -106,10 +106,12 @@
                return;
            }
 
-           if (consent.value === "agree") {
-               // 기증에 동의할 경우 contact 페이지로 이동
-               window.location.href = "{{ url_for('biobank') }}";
-           } else {
+if (consent.value === "agree") {
+    window.location.href = "contact.html";  // 또는 "/contact.html"
+} else {
+    // 외부 URL은 그대로 유지
+    window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
+} else {
                // 미동의시 문진 페이지로 이동
                alert("문진 페이지로 이동합니다.");
                window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
