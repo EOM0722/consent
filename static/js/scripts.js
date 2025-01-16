@@ -31,14 +31,12 @@ function handleConsentSubmit(event) {
         return;
     }
 
-    if (consent.value === "agree") {
-        // 기증 동의 시 동의서 작성 페이지로 이동
-        window.location.href = "/contact.html";
-    } else {
-        // 미동의 시 문진 페이지로 이동
-        alert("문진 페이지로 이동합니다.");
-        window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
-    }
+if (consent.value === "agree") {
+    window.location.href = "contact.html";  // 템플릿 폴더 경로 제거
+} else {
+    // 미동의시 문진 페이지로 이동
+    alert("문진 페이지로 이동합니다.");
+    window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
 }
 
 // 동의서 페이지 초기화 함수
