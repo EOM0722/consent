@@ -8,6 +8,41 @@ const API_URL = 'https://atob.ngrok.app';
 
 // 서명 패드 초기화
 document.addEventListener('DOMContentLoaded', function () {
+    // 동의 여부 선택 폼 이벤트 리스너 추가
+    const consentForm = document.getElementById('consentForm');
+    if (consentForm) {
+        consentForm.addEventListener('submit', handleConsentSubmit);
+    }
+
+    // 기존 동의서 페이지 초기화 (contact.html에서 실행)
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        initializeConsentForm();
+    }
+});
+
+// 동의 여부 선택 처리
+function handleConsentSubmit(event) {
+    event.preventDefault();
+    const consent = document.querySelector('input[name="consent"]:checked');
+    
+    if (!consent) {
+        alert("동의 여부를 선택해주세요.");
+        return;
+    }
+
+    if (consent.value === "agree") {
+        // 기증 동의 시 동의서 작성 페이지로 이동
+        window.location.href = "/contact.html";
+    } else {
+        // 미동의 시 문진 페이지로 이동
+        alert("문진 페이지로 이동합니다.");
+        window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
+    }
+}
+
+// 동의서 페이지 초기화 함수
+function initializeConsentForm() {
     // 캔버스 초기화
     initializeCanvas();
     
@@ -16,11 +51,13 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // 현재 날짜 표시
     displayCurrentDate();
-});
+}
 
 // 캔버스 초기화 함수
 function initializeCanvas() {
     canvas = document.getElementById('signatureCanvas');
+    if (!canvas) return;
+
     ctx = canvas.getContext('2d');
 
     function setCanvasSize() {
@@ -67,6 +104,8 @@ function populateBirthDateDropdowns() {
     const monthSelect = document.getElementById('birthMonth');
     const daySelect = document.getElementById('birthDay');
 
+    if (!yearSelect || !monthSelect || !daySelect) return;
+
     // 년도 옵션 (현재 년도부터 100년 전까지)
     const currentYear = new Date().getFullYear();
     for (let year = currentYear; year >= currentYear - 100; year--) {
@@ -102,11 +141,14 @@ function populateBirthDateDropdowns() {
 
 // 현재 날짜 표시
 function displayCurrentDate() {
+    const currentDateElement = document.getElementById('currentDate');
+    if (!currentDateElement) return;
+
     const currentDate = new Date();
     const dateString = currentDate.getFullYear() + '년 ' + 
                       (currentDate.getMonth() + 1) + '월 ' + 
                       currentDate.getDate() + '일';
-    document.getElementById('currentDate').textContent = dateString;
+    currentDateElement.textContent = dateString;
 }
 
 // 터치 이벤트 처리
@@ -154,6 +196,7 @@ function stopDrawing() {
 }
 
 function clearSignature() {
+    if (!ctx) return;
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -202,6 +245,7 @@ async function saveSignature() {
 // 폼 제출
 async function submitForm() {
     const form = document.getElementById('contactForm');
+    if (!form) return;
     
     // 폼 데이터 수집
     const name = document.getElementById('name').value;
