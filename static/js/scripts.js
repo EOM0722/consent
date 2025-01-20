@@ -266,27 +266,38 @@ async function submitForm() {
 
     // 구글 스크립트 API 호출
     const url = 'https://script.google.com/macros/s/AKfycby5CTjdm75XCPmW9CAHIqUZH6gr10G_E_Z8xzLyuUAjYkwYz7Ay3wpQEmNRtNuQ4REj/exec';
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                document.getElementById('submitSuccessMessage').classList.remove('d-none');
-                form.reset();
-                clearSignature();
-                // 동의서 제출 후 건강검진 페이지로 이동
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('birthdate', birthdate);
+    formData.append('address', address);
+    formData.append('phone', phone);
+    formData.append('gender', gender);
+    formData.append('consentDate', consentDate);
+    formData.append('consent', consent);
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            document.getElementById('submitSuccessMessage').classList.remove('d-none');
+            form.reset();
+            clearSignature();
+            setTimeout(() => {
                 window.location.href = 'https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1';
-            } else {
-                document.getElementById('submitErrorMessage').classList.remove('d-none');
-            }
+            }, 500);
+        } else {
+            document.getElementById('submitErrorMessage').classList.remove('d-none');
             document.getElementById('submitButton').disabled = false;
         }
-    };
+    } catch (error) {
+        console.error('폼 제출 중 오류 발생:', error);
+        document.getElementById('submitErrorMessage').classList.remove('d-none');
+        document.getElementById('submitButton').disabled = false;
+    }
 
-    const data = `name=${encodeURIComponent(name)}&birthdate=${encodeURIComponent(birthdate)}&address=${encodeURIComponent(address)}&phone=${encodeURIComponent(phone)}&gender=${encodeURIComponent(gender)}&consentDate=${encodeURIComponent(consentDate)}&consent=${encodeURIComponent(consent)}`;
-
-    xhr.send(data);
     document.getElementById('submitButton').disabled = true;
 }
