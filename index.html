@@ -40,7 +40,14 @@
             padding: 15px 30px;
         }
         .main-title {
-            font-size: 2.5em !important; /* 메인 타이틀 크기 증가 */
+            font-size: 2.5em !important; /* 메인 타이틀 크기 */
+        }
+        /* 첫 번째 설명 문구용 - 작은 크기 */
+        .main-title-small {
+            font-size: 1.3em !important; /* 원하는 크기로 조절 가능 */
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
         }
         .sub-title {
             font-size: 1.8em !important; /* 서브 타이틀 크기 증가 */
@@ -71,6 +78,9 @@
                         <img src="/static/img/bank.jpg" alt="Apple Tree Oral Biobank Banner" class="img-fluid rounded">
                     </div>
                     <div class="text-center mb-5">
+                        <!-- 첫 번째 문구: 작은 크기 -->
+                        <p class="fw-bolder main-title-small">검사하고 남은 혈액 및 검사결과가 버려지지 않고 연구를 위해 기증됩니다.</p>
+                        <!-- 두 번째 문구: 큰 크기 -->
                         <h1 class="fw-bolder main-title">기증 동의 여부를 선택해주세요</h1>
                         <p class="lead text-muted mb-0 sub-title">귀하의 선택에 따라 절차가 진행됩니다.</p>
                     </div>
