@@ -52,6 +52,12 @@
         .sub-title {
             font-size: 1.8em !important; /* 서브 타이틀 크기 증가 */
         }
+        /* 동의/비동의 영역 구분선 */
+        .consent-divider {
+            margin: 2rem auto;
+            width: 75%;
+            opacity: 0.25;
+        }
     </style>
 </head>
 <body class="d-flex flex-column h-100">
@@ -69,6 +75,19 @@
         <section class="py-5">
             <div class="container px-5">
                 <div class="bg-light rounded-4 py-5 px-4 px-md-5 text-center">
+                    <!-- 비동의: 최상단, 누르면 바로 문진으로 이동 -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 text-center">
+                            <button type="button" id="disagreeButton"
+                                class="btn btn-outline-secondary btn-lg submit-button w-75"
+                                onclick="goToSurvey()">
+                                기증에 동의하지 않습니다
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="consent-divider">
+
                     <!-- 축소된 동의서 이미지 -->
                     <div class="consent-image-container mb-4">
                         <img src="/static/img/consent.jpg" alt="Consent Process" class="img-fluid rounded">
@@ -85,14 +104,10 @@
                         <p class="lead text-muted mb-0 sub-title">귀하의 선택에 따라 절차가 진행됩니다.</p>
                     </div>
                     <form id="consentForm" class="mt-4">
-                        <!-- 동의 여부 선택 -->
+                        <!-- 동의: 선택 후 선택 완료 -->
                         <div class="form-check mb-4 justify-content-center">
-                            <input class="form-check-input" type="radio" name="consent" id="agree" value="agree" required />
+                            <input class="form-check-input" type="radio" name="consent" id="agree" value="agree" />
                             <label class="form-check-label" for="agree">기증에 동의합니다.</label>
-                        </div>
-                        <div class="form-check mb-4 justify-content-center">
-                            <input class="form-check-input" type="radio" name="consent" id="disagree" value="disagree" required />
-                            <label class="form-check-label" for="disagree">기증에 동의하지 않습니다.</label>
                         </div>
 
                         <!-- Submit Button -->
