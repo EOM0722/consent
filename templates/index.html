@@ -26,37 +26,75 @@
         }
         .form-check-input {
             margin-left: 0;
-            transform: scale(1.5); /* 라디오 버튼 크기 증가 */
+            transform: scale(1.5);
         }
         .consent-image-container {
-            width: 75%; /* 이미지 컨테이너를 75%로 제한 */
+            width: 75%;
             margin: 0 auto;
         }
-        .form-check-label {
-            font-size: 2em !important; /* 텍스트 크기 2배 증가 */
-        }
+
+        /* 버튼: 줄바꿈 방지 + 자동 축소 */
         .submit-button {
-            font-size: 2em !important; /* 버튼 텍스트 크기 2배 증가 */
+            font-size: 1.6rem;
             padding: 15px 30px;
+            white-space: nowrap;
+        }
+        .form-check-label {
+            font-size: 1.6rem;
         }
         .main-title {
-            font-size: 2.5em !important; /* 메인 타이틀 크기 */
+            font-size: 2rem;
         }
-        /* 첫 번째 설명 문구용 - 작은 크기 */
         .main-title-small {
-            font-size: 1.3em !important; /* 원하는 크기로 조절 가능 */
+            font-size: 1.1rem;
             font-weight: 600;
             color: #555;
             margin-bottom: 15px;
         }
         .sub-title {
-            font-size: 1.8em !important; /* 서브 타이틀 크기 증가 */
+            font-size: 1.3rem;
         }
-        /* 동의/비동의 영역 구분선 */
         .consent-divider {
             margin: 2rem auto;
             width: 75%;
             opacity: 0.25;
+        }
+
+        /* 모바일 (768px 이하) */
+        @media (max-width: 768px) {
+            .submit-button {
+                font-size: 1.2rem;
+                padding: 12px 20px;
+            }
+            .form-check-label {
+                font-size: 1.2rem;
+            }
+            .main-title {
+                font-size: 1.5rem;
+            }
+            .main-title-small {
+                font-size: 0.95rem;
+            }
+            .sub-title {
+                font-size: 1.05rem;
+            }
+            .consent-image-container {
+                width: 100%;
+            }
+        }
+
+        /* 아주 작은 폰 (400px 이하) */
+        @media (max-width: 400px) {
+            .submit-button {
+                font-size: 1rem;
+                padding: 10px 16px;
+            }
+            .form-check-label {
+                font-size: 1.05rem;
+            }
+            .main-title {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
@@ -79,7 +117,7 @@
                     <div class="row g-3 mb-4">
                         <div class="col-12 text-center">
                             <button type="button" id="disagreeButton"
-                                class="btn btn-outline-secondary btn-lg submit-button w-75"
+                                class="btn btn-outline-secondary btn-lg submit-button w-100"
                                 onclick="goToSurvey()">
                                 기증에 동의하지 않습니다
                             </button>
@@ -113,7 +151,7 @@
                         <!-- Submit Button -->
                         <div class="row g-3">
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg submit-button w-50">선택 완료</button>
+                                <button type="submit" class="btn btn-primary btn-lg submit-button w-100">선택 완료</button>
                             </div>
                         </div>
                     </form>
