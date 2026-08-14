@@ -21,22 +21,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// 동의 여부 선택 처리
+// 동의 선택 후 선택 완료 처리 (동의자만 이 경로로 옴)
 function handleConsentSubmit(event) {
     event.preventDefault();
     const consent = document.querySelector('input[name="consent"]:checked');
-    
+
     if (!consent) {
-        alert("동의 여부를 선택해주세요.");
+        alert("기증에 동의하시면 '기증에 동의합니다'를 선택한 후 선택 완료를 눌러주세요.");
         return;
     }
 
-    if (consent.value === "agree") {
-        window.location.href = "contact.html";
-    } else {
-        alert("문진 페이지로 이동합니다.");
-        window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
-    }
+    window.location.href = "contact.html";
+}
+
+// 비동의: 바로 문진 페이지로 이동
+function goToSurvey() {
+    window.location.href = "https://eo-m.com/2025/HSP/HSP_Controller.asp?part=nfc&mehId=GV4541&mtype=1";
 }
 
 // 동의서 페이지 초기화 함수
